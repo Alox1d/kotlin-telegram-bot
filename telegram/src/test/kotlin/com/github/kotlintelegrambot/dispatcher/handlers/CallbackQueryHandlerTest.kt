@@ -40,9 +40,10 @@ class CallbackQueryHandlerTest {
 
     @Test
     fun acceptsGameCallbackWithoutDataWhenNoFilterIsSet() {
-        val gameUpdate = anyUpdate(
-            callbackQuery = anyCallbackQuery(data = null, gameShortName = "chess"),
-        )
+        val gameUpdate =
+            anyUpdate(
+                callbackQuery = anyCallbackQuery(data = null, gameShortName = "chess"),
+            )
         val sut = CallbackQueryHandler(handleCallbackQuery = handleCallbackQueryMock)
 
         assertTrue(sut.checkUpdate(gameUpdate))
@@ -50,13 +51,15 @@ class CallbackQueryHandlerTest {
 
     @Test
     fun doesNotMatchGameCallbackToDataFilter() {
-        val gameUpdate = anyUpdate(
-            callbackQuery = anyCallbackQuery(data = null, gameShortName = "chess"),
-        )
-        val sut = CallbackQueryHandler(
-            callbackData = "move",
-            handleCallbackQuery = handleCallbackQueryMock,
-        )
+        val gameUpdate =
+            anyUpdate(
+                callbackQuery = anyCallbackQuery(data = null, gameShortName = "chess"),
+            )
+        val sut =
+            CallbackQueryHandler(
+                callbackData = "move",
+                handleCallbackQuery = handleCallbackQueryMock,
+            )
 
         assertFalse(sut.checkUpdate(gameUpdate))
     }
