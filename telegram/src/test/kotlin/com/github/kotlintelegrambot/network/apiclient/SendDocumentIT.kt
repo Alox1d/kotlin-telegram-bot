@@ -19,6 +19,7 @@ import com.github.kotlintelegrambot.testutils.getFileFromResources
 import com.github.kotlintelegrambot.testutils.multipartBoundary
 import com.google.gson.Gson
 import junit.framework.TestCase.assertEquals
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.mockwebserver.MockResponse
 import org.junit.jupiter.api.Test
 
@@ -109,6 +110,41 @@ class SendDocumentIT : ApiClientIT() {
                 getFileAsStringFromResources<SendDocumentIT>("sendDocumentBody.txt"),
                 multipartBoundary,
                 String(getFileFromResources<SendDocumentIT>(DOCUMENT_FILE_NAME).readBytes()),
+                DOCUMENT_FILE_NAME,
+            )
+        assertEquals(expectedRequestBody.normalizeLineEndings(), requestBody.normalizeLineEndings())
+    }
+
+    @Test
+    fun `#sendDocument using an input stream uploads the multipart request`() {
+        givenAnySendDocumentResponse()
+        val fileBytes = getFileFromResources<SendDocumentIT>(DOCUMENT_FILE_NAME).readBytes()
+
+        sut
+            .sendDocument(
+                ChatId.fromId(ANY_CHAT_ID),
+                TelegramFile.ByInputStream(
+                    stream = fileBytes.inputStream(),
+                    filename = DOCUMENT_FILE_NAME,
+                    contentType = "application/pdf".toMediaType(),
+                    contentLength = fileBytes.size.toLong(),
+                ),
+                caption = CAPTION,
+                parseMode = MARKDOWN_V2,
+                disableContentTypeDetection = false,
+                disableNotification = false,
+                protectContent = false,
+                replyMarkup = REPLY_MARKUP,
+            ).execute()
+
+        val request = mockWebServer.takeRequest()
+        val multipartBoundary = request.multipartBoundary
+        val requestBody = request.body.readUtf8().trimIndent()
+        val expectedRequestBody =
+            String.format(
+                getFileAsStringFromResources<SendDocumentIT>("sendDocumentBody.txt"),
+                multipartBoundary,
+                String(fileBytes),
                 DOCUMENT_FILE_NAME,
             )
         assertEquals(expectedRequestBody.normalizeLineEndings(), requestBody.normalizeLineEndings())
