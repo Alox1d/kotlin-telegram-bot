@@ -1,6 +1,6 @@
 # File uploads
 
-Every operation that uploads a media file in this library accepts the same sealed `TelegramFile` type, so you never have to deal with multipart forms by hand. There are five flavours: `ByFileId` reuses a file already on Telegram's servers, `ByUrl` asks Telegram to fetch a remote URL, `ByFile` reads a local `java.io.File`, `ByByteArray` uploads an in-memory blob, and `ByInputStream` (added in Bot API 7.x) streams the file bytes — handy when you are proxying a download and don't want to buffer it all in memory.
+Several media methods in this library accept the sealed `TelegramFile` type, so you can send existing files and upload new ones without constructing multipart requests by hand. There are five variants: `ByFileId` reuses a file already on Telegram's servers, `ByUrl` asks Telegram to fetch a remote URL, `ByFile` reads a local `java.io.File`, `ByByteArray` uploads an in-memory blob, and `ByInputStream` streams bytes directly from an `InputStream` without buffering the entire file.
 
 ```kotlin
 import com.github.kotlintelegrambot.entities.TelegramFile
@@ -31,7 +31,7 @@ bot.sendPhoto(chatId, photo = byBytes, caption = "in-memory blob")
 bot.sendPhoto(chatId, photo = byStream, caption = "streamed upload")
 ```
 
-The same `TelegramFile` flavours work with `sendAudio`, `sendVideo`, `sendDocument`, `sendSticker`, `sendVideoNote`, `sendVoice` and `sendAnimation`, as well as with the items you pass to `sendMediaGroup`.
+All five `TelegramFile` variants are supported by `sendPhoto`, `sendAudio`, `sendVideo`, `sendDocument`, `sendVoice` and `sendAnimation`. Other methods currently have narrower APIs: `sendSticker` takes a file ID or local file, `sendVideoNote` accepts only `TelegramFile.ByFile` or `ByFileId`, and `sendMediaGroup` / `editMessageMedia` use `InputMedia` wrappers without `ByInputStream` support. See [#361](https://github.com/kotlin-telegram-bot/kotlin-telegram-bot/issues/361) for the remaining streaming-upload work.
 
 A small but important detail: when you build a `sendMediaGroup` out of `TelegramFile.ByByteArray` parts, give each part a **unique filename**. Telegram references the attached parts by filename in the multipart body, so two parts called `photo.jpg` will collide and the second one will silently overwrite the first.
 
