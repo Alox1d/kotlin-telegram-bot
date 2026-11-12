@@ -156,6 +156,26 @@ class InlineKeyboardButtonAdapterTest {
         assertEquals(loginUrlButtonJson, actualWebAppButtonJson)
     }
 
+
+    @Test
+    fun `serialize and deserialize inline keyboard buttons with styles`() {
+        val styledUrl = InlineKeyboardButton.Url(ANY_TEXT, ANY_URL, style = "success")
+        val styledCallback = InlineKeyboardButton.CallbackData(ANY_TEXT, ANY_CALLBACK_DATA, style = "primary")
+        val styledPay = InlineKeyboardButton.Pay(ANY_TEXT, style = "danger")
+
+        assertEquals(
+            """{"text":"$ANY_TEXT","url":"$ANY_URL","style":"success"}""",
+            sut.toJson(styledUrl),
+        )
+        assertEquals(
+            """{"text":"$ANY_TEXT","callback_data":"$ANY_CALLBACK_DATA","style":"primary"}""",
+            sut.toJson(styledCallback),
+        )
+        for (button in listOf(styledUrl, styledCallback, styledPay)) {
+            assertEquals(button, sut.fromJson(sut.toJson(button), InlineKeyboardButton::class.java))
+        }
+    }
+
     private companion object {
         const val ANY_TEXT = "Button :P"
         const val ANY_URL = "https://www.github.com/vjgarciag96"
