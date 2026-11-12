@@ -27,12 +27,16 @@ data class LoginUrl(
 sealed class InlineKeyboardButton {
     abstract val text: String
 
+    /** Optional button color: success, danger, or primary (Bot API 9.0+). */
+    abstract val style: String?
+
     /**
      * HTTP or tg:// url to be opened when button is pressed.
      */
     data class Url(
         override val text: String,
         val url: String,
+        override val style: String? = null,
     ) : InlineKeyboardButton()
 
     /**
@@ -41,6 +45,7 @@ sealed class InlineKeyboardButton {
     data class CallbackData(
         override val text: String,
         @SerializedName("callback_data") val callbackData: String,
+        override val style: String? = null,
     ) : InlineKeyboardButton()
 
     /**
@@ -51,6 +56,7 @@ sealed class InlineKeyboardButton {
     data class SwitchInlineQuery(
         override val text: String,
         @SerializedName("switch_inline_query") val switchInlineQuery: String,
+        override val style: String? = null,
     ) : InlineKeyboardButton()
 
     /**
@@ -61,6 +67,7 @@ sealed class InlineKeyboardButton {
     data class SwitchInlineQueryCurrentChat(
         override val text: String,
         @SerializedName("switch_inline_query_current_chat") val switchInlineQueryCurrentChat: String,
+        override val style: String? = null,
     ) : InlineKeyboardButton()
 
     /**
@@ -70,6 +77,7 @@ sealed class InlineKeyboardButton {
     data class CallbackGameButtonType(
         override val text: String,
         @SerializedName("callback_game") val callbackGame: CallbackGame?,
+        override val style: String? = null,
     ) : InlineKeyboardButton()
 
     /**
@@ -78,6 +86,7 @@ sealed class InlineKeyboardButton {
      */
     data class Pay(
         override val text: String,
+        override val style: String? = null,
     ) : InlineKeyboardButton() {
         val pay = true
     }
@@ -88,6 +97,7 @@ sealed class InlineKeyboardButton {
     data class WebApp(
         override val text: String,
         @SerializedName("web_app") val webApp: WebAppInfo,
+        override val style: String? = null,
     ) : InlineKeyboardButton()
 
     /**
@@ -96,6 +106,7 @@ sealed class InlineKeyboardButton {
     data class LoginUrlButtonType(
         override val text: String,
         @SerializedName("login_url") val loginUrl: LoginUrl,
+        override val style: String? = null,
     ) : InlineKeyboardButton()
 
     /**
@@ -104,5 +115,6 @@ sealed class InlineKeyboardButton {
     data class CopyText(
         override val text: String,
         @SerializedName("copy_text") val copyText: CopyTextButton,
+        override val style: String? = null,
     ) : InlineKeyboardButton()
 }
