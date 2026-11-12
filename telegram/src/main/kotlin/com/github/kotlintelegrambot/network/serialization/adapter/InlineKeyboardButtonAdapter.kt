@@ -36,6 +36,7 @@ internal class InlineKeyboardButtonAdapter :
         @SerializedName("web_app") val webApp: WebAppInfo? = null,
         @SerializedName("login_url") val loginUrl: LoginUrl? = null,
         @SerializedName("copy_text") val copyText: CopyTextButton? = null,
+        val style: String? = null,
     )
 
     override fun serialize(
@@ -68,19 +69,20 @@ internal class InlineKeyboardButtonAdapter :
 
         return with(inlineKeyboardButtonDto) {
             when {
-                url != null -> Url(text, url)
-                callbackData != null -> CallbackData(text, callbackData)
-                switchInlineQuery != null -> SwitchInlineQuery(text, switchInlineQuery)
+                url != null -> Url(text, url, style)
+                callbackData != null -> CallbackData(text, callbackData, style)
+                switchInlineQuery != null -> SwitchInlineQuery(text, switchInlineQuery, style)
                 switchInlineQueryCurrentChat != null ->
                     SwitchInlineQueryCurrentChat(
                         text,
                         switchInlineQueryCurrentChat,
+                        style,
                     )
-                callbackGame != null -> CallbackGameButtonType(text, callbackGame)
-                pay != null -> Pay(text)
-                webApp != null -> WebApp(text, webApp)
-                loginUrl != null -> LoginUrlButtonType(text, loginUrl)
-                copyText != null -> CopyText(text, copyText)
+                callbackGame != null -> CallbackGameButtonType(text, callbackGame, style)
+                pay != null -> Pay(text, style)
+                webApp != null -> WebApp(text, webApp, style)
+                loginUrl != null -> LoginUrlButtonType(text, loginUrl, style)
+                copyText != null -> CopyText(text, copyText, style)
                 else -> error("unsupported inline keyboard button $inlineKeyboardButtonDto")
             }
         }
