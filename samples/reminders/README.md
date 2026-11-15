@@ -1,6 +1,6 @@
 # Natural-language reminders
 
-An optional JVM sample using the published [`io.github.alox1d:dateparser-kotlin:0.1.3`](https://central.sonatype.com/artifact/io.github.alox1d/dateparser-kotlin/0.1.3) dependency. DateParser runs offline and is a dependency of this sample only.
+An optional JVM sample using the published [`io.github.alox1d:dateparser-kotlin:0.1.4`](https://central.sonatype.com/artifact/io.github.alox1d/dateparser-kotlin/0.1.4) dependency. DateParser runs offline and is a dependency of this sample only.
 
 ## Run
 
@@ -36,7 +36,9 @@ Use `/cancel` to clear this chat's draft and scheduled reminder. Each chat may h
 
 Use one future time and a nonblank title. No match, multiple matches, date ranges, recurring reminders, and past times are rejected. Use AM/PM (`7pm`) or a 24-hour clock (`19:00`) for explicit times; ambiguous English bare hours such as `tomorrow at 7` are rejected. The sample also rejects invalid numeric clock fields and unconsumed numeric clock/date fragments rather than accepting the parser's fallback time as a requested clock.
 
-DateParser 0.1.3 does not flag every unsupported expression. The sample adds narrow checks for common unparsed forms such as `daily at 5pm`, `between 5 and 8`, and a clock followed by a timezone abbreviation or IANA zone, including labels in parentheses or square brackets such as `7pm (UTC)` and `19:00 [Europe/Berlin]`. Write the time in `REMINDER_TIME_ZONE` and omit embedded zones. These checks are conservative, not a complete natural-language grammar; inspect every preview before confirming. A frequency word in an ordinary title, such as `Read daily report tomorrow`, remains allowed.
+DateParser 0.1.4 does not flag every unsupported expression. The sample adds narrow checks for common unparsed forms such as `daily at 5pm`, `between 5 and 8`, and a clock followed by a timezone abbreviation or IANA zone, including labels in parentheses or square brackets such as `7pm (UTC)` and `19:00 [Europe/Berlin]`. Write the time in `REMINDER_TIME_ZONE` and omit embedded zones. These checks are conservative, not a complete natural-language grammar; inspect every preview before confirming. A frequency word in an ordinary title, such as `Read daily report tomorrow`, remains allowed.
+
+Abbreviated numeric years such as `13/04/27` are rejected instead of being interpreted as ancient dates. Use a four-digit year such as `13/04/2027`.
 
 Date-only phrases such as `/remind Call Alice tomorrow` retain DateParser's reference clock time. At a reference of 10:00 UTC, this previews tomorrow at **10:00**, rather than a default evening time. Always check the displayed time and zone. Confirmation rechecks that the preview's time is still in the future; it does not reparse relative wording later.
 

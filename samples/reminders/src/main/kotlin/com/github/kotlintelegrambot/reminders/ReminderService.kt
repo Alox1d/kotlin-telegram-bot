@@ -173,7 +173,7 @@ class ReminderService(
         val clocks = Regex("(?<![\\p{L}\\d])(\\d+):(\\d+)(?::(\\d+))?(?!\\d)")
         val unresolvedTime = Regex("\\d\\s*[:/]|(?i)(?<![\\p{L}])(?:at|в)\\s+\\d|\\d\\s*[ap]\\.?m\\.?(?![\\p{L}])")
 
-        // Some common unsupported phrases produce point matches in DateParser 0.1.3.
+        // Some common unsupported phrases produce point matches in DateParser.
         val unsupportedSyntax =
             Regex(
                 "(?i)(?<![\\p{L}])(?:between|между)\\s+\\d|" +

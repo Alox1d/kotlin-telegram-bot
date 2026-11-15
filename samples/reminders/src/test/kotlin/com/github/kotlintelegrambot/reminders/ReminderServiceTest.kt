@@ -69,6 +69,19 @@ class ReminderServiceTest {
     }
 
     @ParameterizedTest
+    @ValueSource(strings = ["Call Alice on 13/04/26", "Call Alice on 04/13/26"])
+    fun `abbreviated years are rejected instead of being interpreted as past dates`(text: String) {
+        assertEquals(ReplyKind.PREVIEW, service.draft(1, "Call Alice tomorrow at 7pm").kind)
+
+        val reply = service.draft(1, text)
+
+        assertEquals(ReplyKind.NO_DATE, reply.kind, reply.toString())
+        assertEquals(ReplyKind.NO_DRAFT, service.confirm(1).kind)
+        assertTrue(scheduler.tasks.isEmpty())
+        assertTrue(deliveries.isEmpty())
+    }
+
+    @ParameterizedTest
     @ValueSource(strings = ["Call Alice tomorrow and Friday", "Позвонить Алисе завтра и в пятницу"])
     fun `multiple matches are rejected`(text: String) {
         val reply = service.draft(1, text)
